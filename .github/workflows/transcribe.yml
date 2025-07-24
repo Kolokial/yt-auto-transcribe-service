@@ -9,10 +9,12 @@ jobs:
     steps:
       - run: |
           sudo apt install  ffmpeg
-          ffmpeg --version
+          ffmpeg --help
+        name: Install FFMPEG
       - run: |
           wget https://github.com/yt-dlp/yt-dlp/releases/download/2025.07.21/yt-dlp
           chmod +x yt-dlp
-          ./yt-dlp -x
+          ./yt-dlp --audio-quality 6 --audio-format mp3 -x $URL
+        name: Install YT-DLP
         env:
           URL: ${{secrets.YOUTUBE_PLAYLIST}}
