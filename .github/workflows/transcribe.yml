@@ -28,7 +28,7 @@ jobs:
 
       - name: Install FFMPEG
         run: |
-          sudo apt install  ffmpeg
+          sudo apt install ffmpeg
           ffmpeg --help
 
       - name: Install YT-DLP
@@ -36,8 +36,17 @@ jobs:
           wget https://github.com/yt-dlp/yt-dlp/releases/download/2025.07.21/yt-dlp
           chmod +x yt-dlp
 
-      - name: Download and transcribe
+      - name: Download audio
         env:
           URL: ${{secrets.YOUTUBE_PLAYLIST}}
         run: |
-          ./yt-dlp --playlist-items -1 --audio-quality 6 --audio-format mp3 -x $URL --cookies cookies.txt
+          ./yt-dlp --playlist-items -1 --audio-quality 6 --audio-format mp3 -x --cookies cookies.txt --output audio $URL
+
+      - name: Transcribe
+        run: |
+          vosk-transcriber -i audio.mp3 -o transcription.srt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Axelor8.${{github.run_number}}
+          path: transcription.srt
