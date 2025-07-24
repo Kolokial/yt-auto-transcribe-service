@@ -22,15 +22,22 @@ jobs:
         env:
           COOKIES: ${{secrets.COOKIES}}
 
-      - run: |
+      - name: Install Vox
+        run: |
+          pip3 install vosk
+
+      - name: Install FFMPEG
+        run: |
           sudo apt install  ffmpeg
           ffmpeg --help
-        name: Install FFMPEG
 
-      - run: |
+      - name: Install YT-DLP
+        run: |
           wget https://github.com/yt-dlp/yt-dlp/releases/download/2025.07.21/yt-dlp
           chmod +x yt-dlp
-          ./yt-dlp --audio-quality 6 --audio-format mp3 -x $URL --cookies cookies.txt
-        name: Install YT-DLP
+
+      - name: Download and transcribe
         env:
           URL: ${{secrets.YOUTUBE_PLAYLIST}}
+        run: |
+          ./yt-dlp --playlist-items -1 --audio-quality 6 --audio-format mp3 -x $URL --cookies cookies.txt
