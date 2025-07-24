@@ -7,13 +7,22 @@ jobs:
   transcribe:
     runs-on: ubuntu-latest
     steps:
+      - run: >
+          gpg 
+          --quiet
+          --batch
+          --yes
+          --decrypt
+          --passphrase="$COOKIES"
+          --output ./cookies.txt
+          cookies.txt.gpg
+        name: Decrypt cookies
+
       - run: |
           sudo apt install  ffmpeg
           ffmpeg --help
         name: Install FFMPEG
-      - run: |
-          echo $COOKIES >> cookies.txt
-        name: Write cookies
+
       - run: |
           wget https://github.com/yt-dlp/yt-dlp/releases/download/2025.07.21/yt-dlp
           chmod +x yt-dlp
