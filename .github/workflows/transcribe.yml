@@ -19,6 +19,8 @@ jobs:
           --output ./cookies.txt
           cookies.txt.gpg
         name: Decrypt cookies
+        env:
+          COOKIES: ${{secrets.COOKIES}}
 
       - run: |
           sudo apt install  ffmpeg
